@@ -8,6 +8,8 @@ const productosTotal = document.getElementById("productosTotal");
 const precioTotal = document.getElementById("precioTotal");
 const tablaListaCompras = document.getElementById("tablaListaCompras");
 const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
+const btnClear = document.getElementById("btnClear");
+
 
 let cont = 0;
 let totalEnProductos = 0;
@@ -100,6 +102,32 @@ btnAgregar.addEventListener("click", function (event) {
 
 
 });//btnAgregar click
+
+  btnClear.addEventListener("click",function(event){
+    event.preventDefault();
+    txtName.value="";
+    txtNumber.value="";
+
+    txtName.style.border="";
+    txtNumber.style.border="";
+
+    cuerpoTabla.innerHTML="";
+
+    cont=0;
+    totalEnProductos=0;
+    costoTotal=0;
+    datos= new Array();
+
+    contadorProductos.innerText="0";
+    productosTotal.innerText="0";
+    precioTotal.innerText="$0";
+
+    localStorage.removeItem("datos");
+    localStorage.removeItem("resumen");
+
+    txtName.focus();
+
+  }); //btnClear
 
 window.addEventListener("load", function (event) {
     event.preventDefault();
