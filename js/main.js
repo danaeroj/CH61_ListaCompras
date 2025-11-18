@@ -12,6 +12,7 @@ const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
 let cont = 0;
 let totalEnProductos = 0;
 let costoTotal = 0;
+let datos = new Array(); //[];
 
 function validarCantidad(cantidad) {
     if (cantidad.length == 0) {
@@ -62,6 +63,15 @@ btnAgregar.addEventListener("click", function (event) {
            <td>${precio} </t<>
         </tr>`;
 
+        let elemento = {
+            "cont": cont,
+            "nombre": txtName.value,
+            "cantidad": txtNumber.value,
+            "precio": precio
+        };
+        datos.push(elemento);
+        localStorage.setItem("datos", JSON.stringify(datos));
+
 
         totalEnProductos += Number(txtNumber.value);
         costoTotal += precio * Number(txtNumber.value);
@@ -93,16 +103,32 @@ btnAgregar.addEventListener("click", function (event) {
 
 window.addEventListener("load", function (event) {
     event.preventDefault();
-    if (this.localStorage.getItem("resumen") != null){
-    let resumen = JSON.parse(this.localStorage.getItem("resumen"));
-    cont = resumen.cont;
-    totalEnProductos = resumen.totalEnProductos;
-    costoTotal = resumen.costoTotal;
-}   //!=null       
+    if  (this.localStorage.getItem("datos") != null){
+        datos= JSON.parse(this.localStorage.getItem("datos"));
+        datos.forEach((e)=>{
+            let row = `<tr>
+        <td>${e.cont} </tr<>
+         <td>${e.nombre}</t<>
+          <td>${e.cantidad}</t<>
+           <td>${e.precio} </t<>
+        </tr>`;
+         cuerpoTabla.insertAdjacentHTML("beforeend", row);
 
-contadorProductos.innerText = cont;
-productosTotal.innerText = totalEnProductos;
-precioTotal.innerText = new Intl.NumberFormat("es-MX",
-    { style: "currency", currency: "MXN" }).format(costoTotal);
+
+        });
+
+    }//datos !=null
+
+    if (this.localStorage.getItem("resumen") != null) {
+        let resumen = JSON.parse(this.localStorage.getItem("resumen"));
+        cont = resumen.cont;
+        totalEnProductos = resumen.totalEnProductos;
+        costoTotal = resumen.costoTotal;
+    }   //!=null       
+
+    contadorProductos.innerText = cont;
+    productosTotal.innerText = totalEnProductos;
+    precioTotal.innerText = new Intl.NumberFormat("es-MX",
+        { style: "currency", currency: "MXN" }).format(costoTotal);
 
 });//window load
