@@ -6,8 +6,8 @@ const alertValidaciones = document.getElementById("alertValidaciones");
 const contadorProductos = document.getElementById("contadorProductos");
 const productosTotal = document.getElementById("productosTotal");
 const precioTotal = document.getElementById("precioTotal");
-const tablaListaCompras=document.getElementById("tablaListaCompras");
-const cuerpoTabla= tablaListaCompras.getElementsByTagName("tbody").item(0);
+const tablaListaCompras = document.getElementById("tablaListaCompras");
+const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
 
 let cont = 0;
 let totalEnProductos = 0;
@@ -54,7 +54,7 @@ btnAgregar.addEventListener("click", function (event) {
 
     if (isValid) {
         let precio = getPrecio();
-         cont++;
+        cont++;
         let row = `<tr>
         <td>${cont} </tr<>
          <td>${txtName.value}</t<>
@@ -62,22 +62,47 @@ btnAgregar.addEventListener("click", function (event) {
            <td>${precio} </t<>
         </tr>`;
 
-       
+
         totalEnProductos += Number(txtNumber.value);
         costoTotal += precio * Number(txtNumber.value);
 
 
-        cuerpoTabla.insertAdjacentHTML("beforeend",row);
+        cuerpoTabla.insertAdjacentHTML("beforeend", row);
         contadorProductos.innerText = cont;
         productosTotal.innerText = totalEnProductos;
         precioTotal.innerText = new Intl.NumberFormat("es-MX",
             { style: "currency", currency: "MXN" }).format(costoTotal);
 
-            txtName.value="";
-            txtName.valUe="";
-            txtName.focus();
+
+        let resumen = {
+            "cont": cont,
+            "totalEnProductos": totalEnProductos,
+            "costoTotal": costoTotal
+        };
+
+        localStorage.setItem("resumen", JSON.stringify(resumen));
+
+        txtName.value = "";
+        txtNumber.value = "";
+        txtName.focus();
 
     }//is valid
 
 
 });//btnAgregar click
+
+window.addEventListener("load", function (event) {
+    event.preventDefault();
+    if (this.localStorage.getItem("resumen") != null){
+    let resumen = JSON.parse(this.localStorage.getItem("resumen"));
+    cont = resumen.cont;
+    totalEnProductos = resumen.totalEnProductos;
+    costoTotal = resumen.costoTotal;
+}   //!=null       
+
+contadorProductos.innerText = cont;
+productosTotal.innerText = totalEnProductos;
+precioTotal.innerText = new Intl.NumberFormat("es-MX",
+    { style: "currency", currency: "MXN" }).format(costoTotal);
+
+});//window load
